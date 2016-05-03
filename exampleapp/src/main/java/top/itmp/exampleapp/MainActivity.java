@@ -1,6 +1,5 @@
 package top.itmp.exampleapp;
 
-import android.content.Context;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
@@ -90,8 +89,8 @@ public class MainActivity extends AppCompatActivity {
                             @Override
                             public void onDenied() {
                                 new AlertDialog.Builder(MainActivity.this)
-                                        .setTitle("Root Asscess")
-                                        .setMessage("RootAccessDenied")
+                                        .setTitle("Root Access")
+                                        .setMessage("Root Access Has Been Denied!!")
                                         .setPositiveButton(android.R.string.ok, null)
                                         .show();
                             }

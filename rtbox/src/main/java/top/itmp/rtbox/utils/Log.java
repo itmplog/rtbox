@@ -39,7 +39,7 @@ public final class Log {
 
     public static void i(String tag, String msg, Throwable tr){
         if(RTBox.DebugMode){
-            android.util.Log.d(tag, msg, tr);
+            android.util.Log.i(tag, msg, tr);
         }
     }
 
