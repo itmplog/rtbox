@@ -10,6 +10,8 @@ import java.util.List;
 
 import top.itmp.rtbox.command.Command;
 import top.itmp.rtbox.utils.Log;
+import top.itmp.rtbox.utils.OnRootAccessDenied;
+import top.itmp.rtbox.utils.RootAccessDeniedException;
 import top.itmp.rtbox.utils.Utils;
 
 /**
@@ -20,6 +22,7 @@ public class Shell implements Closeable {
     private final BufferedReader stdOutErr;
     private final DataOutputStream outputStream;
     private final List<Command> commands = new ArrayList<>();
+    private static OnRootAccessDenied onRootAccessDenied;
     private boolean close = false;
 
     private static final String LD_LIBRARY_PATH = System.getenv("LD_LIBRARY_PATH");
@@ -43,6 +46,11 @@ public class Shell implements Closeable {
 
     public static Shell startRootShell() throws IOException {
         return startRootShell(null, null);
+    }
+
+    public static Shell startRootShell(OnRootAccessDenied onAccess) throws IOException{
+        onRootAccessDenied = onAccess;
+        return startRootShell();
     }
 
     public static Shell startShell(ArrayList<String> customEnv, String baseDirectory)
@@ -81,8 +89,12 @@ public class Shell implements Closeable {
         
         while (true) {
             String line = stdOutErr.readLine();
-            if (line == null)
-                ;
+            if (line == null) {
+                if (onRootAccessDenied != null)
+                    onRootAccessDenied.onDenied();
+                throw new RootAccessDeniedException(
+                        "stdout line is null! Access was denied or this executeable is not a shell!");
+            }
             if ("".equals(line))
                 continue;
             if ("Started".equals(line))

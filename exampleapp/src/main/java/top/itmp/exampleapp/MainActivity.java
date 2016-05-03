@@ -1,5 +1,7 @@
 package top.itmp.exampleapp;
 
+import android.content.Context;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.text.TextUtils;
@@ -16,6 +18,7 @@ import java.util.concurrent.TimeoutException;
 import top.itmp.rtbox.RTBox;
 import top.itmp.rtbox.Shell;
 import top.itmp.rtbox.command.SimpleCommand;
+import top.itmp.rtbox.utils.OnRootAccessDenied;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -51,7 +54,7 @@ public class MainActivity extends AppCompatActivity {
                         SimpleCommand simpleCommand = new SimpleCommand(execString);
                         shell.add(simpleCommand).waitForFinish();
 
-                        content.append(simpleCommand.getOutput() + simpleCommand.getExitCode());
+                        content.append(simpleCommand.getOutput() +"return: " + simpleCommand.getExitCode());
 
                         scrollView.post(new Runnable() {
                             @Override
@@ -68,6 +71,43 @@ public class MainActivity extends AppCompatActivity {
                     }
                 }
 
+            }
+        });
+
+        superExec.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                String execString = execContent.getText().toString();
+
+                if (TextUtils.isEmpty(execString)) {
+                    Toast.makeText(getApplicationContext(), "Must not be empty", Toast.LENGTH_SHORT).show();
+                } else {
+
+
+                    try {
+
+                        Shell shell = Shell.startRootShell(new OnRootAccessDenied(){
+                            @Override
+                            public void onDenied() {
+                                new AlertDialog.Builder(MainActivity.this)
+                                        .setTitle("Root Asscess")
+                                        .setMessage("RootAccessDenied")
+                                        .setPositiveButton(android.R.string.ok, null)
+                                        .show();
+                            }
+                        });
+                        //Shell shell = Shell.startRootShell();
+                        SimpleCommand simpleCommand = new SimpleCommand(execString);
+
+                        shell.add(simpleCommand).waitForFinish();
+
+                        content.setText(simpleCommand.getOutput());
+                    } catch (IOException e) {
+                        e.printStackTrace();
+                    }catch (TimeoutException e){
+                        e.printStackTrace();
+                    }
+                }
             }
         });
 
