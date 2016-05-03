@@ -32,4 +32,11 @@
         android:text="superExec"
         android:layout_alignParentBottom="true"
         android:layout_toRightOf="@+id/exec"/>
+    <Button
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/checkRootAccess"
+        android:layout_alignParentBottom="true"
+        android:layout_alignParentRight="true"
+        android:text="CheckRootAccess"/>
 </RelativeLayout>

@@ -26,6 +26,7 @@ public class MainActivity extends AppCompatActivity {
     private EditText execContent;
     private Button exec;
     private Button superExec;
+    private Button checkRootAccess;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -37,6 +38,7 @@ public class MainActivity extends AppCompatActivity {
         execContent = (EditText)findViewById(R.id.execContent);
         exec = (Button)findViewById(R.id.exec);
         superExec = (Button)findViewById(R.id.execSuper);
+        checkRootAccess = (Button)findViewById(R.id.checkRootAccess);
 
         RTBox.DebugMode = true;
 
@@ -101,6 +103,8 @@ public class MainActivity extends AppCompatActivity {
                         shell.add(simpleCommand).waitForFinish();
 
                         content.setText(simpleCommand.getOutput());
+
+                        shell.close();
                     } catch (IOException e) {
                         e.printStackTrace();
                     }catch (TimeoutException e){
@@ -110,5 +114,21 @@ public class MainActivity extends AppCompatActivity {
             }
         });
 
+        checkRootAccess.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+
+                AlertDialog.Builder builder = new AlertDialog.Builder(MainActivity.this)
+                        .setTitle("Root Access")
+                        .setPositiveButton(android.R.string.ok, null);
+                if(RTBox.isRootAccessGranted()){
+                    builder.setMessage("Granted")
+                            .show();
+                }else{
+                    builder.setMessage("Not Granted")
+                            .show();
+                }
+            }
+        });
     }
 }
