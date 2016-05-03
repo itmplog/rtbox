@@ -87,6 +87,7 @@ public class MainActivity extends AppCompatActivity {
 
                     try {
 
+
                         Shell shell = Shell.startRootShell(new OnRootAccessDenied(){
                             @Override
                             public void onDenied() {
@@ -98,6 +99,7 @@ public class MainActivity extends AppCompatActivity {
                             }
                         });
                         //Shell shell = Shell.startRootShell();
+
                         SimpleCommand simpleCommand = new SimpleCommand(execString);
 
                         shell.add(simpleCommand).waitForFinish();

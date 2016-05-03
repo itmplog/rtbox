@@ -22,7 +22,7 @@ public class Shell implements Closeable {
     private final BufferedReader stdOutErr;
     private final DataOutputStream outputStream;
     private final List<Command> commands = new ArrayList<>();
-    private static OnRootAccessDenied onRootAccessDenied;
+    private OnRootAccessDenied onRootAccessDenied;
     private boolean isRootAccessGranted = false;
     private boolean close = false;
 
@@ -50,8 +50,8 @@ public class Shell implements Closeable {
     }
 
     public static Shell startRootShell(OnRootAccessDenied onAccess) throws IOException{
-        onRootAccessDenied = onAccess;
-        return startRootShell();
+        Shell shell = new Shell(Utils.getSuPath(), null, null, onAccess);
+        return shell;
     }
 
     public static Shell startShell(ArrayList<String> customEnv, String baseDirectory)
@@ -75,6 +75,44 @@ public class Shell implements Closeable {
 
     public static Shell startCustomShell(String shellPath) throws IOException {
         return startCustomShell(shellPath, null, null);
+    }
+
+    private Shell(String shell, ArrayList<String> customEnv, String baseDirectory, OnRootAccessDenied onRootAccessDenied) throws IOException{
+        this.onRootAccessDenied = onRootAccessDenied;
+
+        Log.d(RTBox.TAG, "Starting shell: " + shell);
+
+        process = Utils.runWithEnv(shell, customEnv, baseDirectory);
+
+        stdOutErr = new BufferedReader(new InputStreamReader(process.getInputStream()));
+        outputStream = new DataOutputStream(process.getOutputStream());
+
+        outputStream.write("echo Started\n".getBytes());
+        outputStream.flush();
+
+        while (true) {
+            String line = stdOutErr.readLine();
+            if (line == null) {
+                if (onRootAccessDenied != null)
+                    onRootAccessDenied.onDenied();
+                throw new RootAccessDeniedException(
+                        "stdout line is null! Access was denied or this executeable is not a shell!");
+            }
+            if ("".equals(line))
+                continue;
+            if ("Started".equals(line))
+                break;
+
+            destroyShellProcess();
+            throw new IOException("Unable to start shell, unexpected output \"" + line + "\"");
+        }
+
+        if(Utils.getSuPath().equals(shell)){
+            isRootAccessGranted = true;
+        }
+
+        new Thread(inputRunnable, "Shell Input").start();
+        new Thread(outputRunnable, "Shell Output").start();
     }
 
     private Shell(String shell, ArrayList<String> customEnv, String baseDirectory) throws IOException{
