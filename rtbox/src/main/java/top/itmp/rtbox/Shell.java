@@ -23,6 +23,7 @@ public class Shell implements Closeable {
     private final DataOutputStream outputStream;
     private final List<Command> commands = new ArrayList<>();
     private static OnRootAccessDenied onRootAccessDenied;
+    private boolean isRootAccessGranted = false;
     private boolean close = false;
 
     private static final String LD_LIBRARY_PATH = System.getenv("LD_LIBRARY_PATH");
@@ -102,6 +103,10 @@ public class Shell implements Closeable {
 
             destroyShellProcess();
             throw new IOException("Unable to start shell, unexpected output \"" + line + "\"");
+        }
+
+        if(Utils.getSuPath().equals(shell)){
+            isRootAccessGranted = true;
         }
 
         new Thread(inputRunnable, "Shell Input").start();
@@ -257,6 +262,10 @@ public class Shell implements Closeable {
         }
 
         return command;
+    }
+
+    public boolean isRootAccessGranted(){
+        return isRootAccessGranted;
     }
 
     public int getCommandsSize() {
