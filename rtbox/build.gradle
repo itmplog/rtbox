@@ -1,14 +1,28 @@
-apply plugin: 'com.android.library'
+buildscript {
+    repositories {
+        jcenter()
+    }
+    dependencies {
+        classpath 'com.github.dcendents:android-maven-gradle-plugin:1.3'
+        classpath 'com.jfrog.bintray.gradle:gradle-bintray-plugin:1.6'
+    }
+}
 
+apply plugin: 'com.android.library'
+apply plugin: 'com.github.dcendents.android-maven'
+apply plugin: 'com.jfrog.bintray'
+
+group = gradle.group
+version = gradle.versionName + '.' + gradle.versionCode
 android {
-    compileSdkVersion 23
-    buildToolsVersion "23.0.3"
+    compileSdkVersion gradle.compileSdkVersion
+    buildToolsVersion gradle.buildToolsVersion
 
     defaultConfig {
-        minSdkVersion 9
-        targetSdkVersion 23
-        versionCode 1
-        versionName "1.0"
+        minSdkVersion rootProject.ext.minSdkVersion
+        targetSdkVersion rootProject.ext.compileSdkVersion
+        versionCode gradle.versionCode
+        versionName gradle.versionName
     }
     buildTypes {
         release {
@@ -16,6 +30,96 @@ android {
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
         }
     }
+}
+
+
+install {
+    repositories.mavenInstaller {
+        pom.project {
+            name gradle.rtName
+            description gradle.description
+            url gradle.url
+            inceptionYear gradle.inceptionYear
+
+            packaging gradle.packaging
+            groupId gradle.group
+            artifactId 'rtbox'
+            version gradle.versionName
+
+            licenses {
+                license {
+                    name 'The Apache Software License, Version 2.0'
+                    url 'http://www.apache.org/licenses/LICENSE-2.0.txt'
+                    distribution 'repo'
+                }
+            }
+            scm {
+                url gradle.url
+                connection gradle.gitUrl
+            }
+            developers {
+                developer {
+                    id gradle.id
+                    name gradle.name
+                }
+            }
+        }
+    }
+}
+
+// load properties
+Properties properties = new Properties()
+File localPropertiesFile = project.rootProject.file("local.properties")
+if(localPropertiesFile.exists()){
+    properties.load(localPropertiesFile.newDataInputStream())
+}
+File projectPropertiesFile = project.rootProject.file("project.properties")
+if(projectPropertiesFile.exists()){
+    properties.load(projectPropertiesFile.newDataInputStream())
+}
+bintray {
+    user = properties.getProperty('bintrayUser')
+    key = properties.getProperty('bintrayApiKey')
+    //System.out.print(user + key)
+    configurations = ['archives']
+    pkg {
+        repo = gradle.repo
+        name = gradle.pkgName
+        userOrg = gradle.org
+        licenses = ['Apache-2.0']
+        vcsUrl = gradle.gitUrl
+        version {
+            name = gradle.versionName
+            desc = gradle.description
+            vcsTag = gradle.versionCode
+            labels = gradle.labels
+        }
+    }
+}
+
+if (project.hasProperty('bintrayUser') && project.hasProperty('bintrayKey')) {
+    bintray.user = project.bintrayUser
+    bintray.key = project.bintrayKey
+}
+
+task generateSourcesJar(type: Jar) {
+    from android.sourceSets.main.java.srcDirs
+    classifier 'sources'
+}
+
+task generateJavadocs(type: Javadoc) {
+    source = android.sourceSets.main.java.srcDirs
+    classpath += project.files(android.getBootClasspath().join(File.pathSeparator))
+}
+
+task generateJavadocsJar(type: Jar, dependsOn: generateJavadocs) {
+    from generateJavadocs.destinationDir
+    classifier 'javadoc'
+}
+
+artifacts {
+    archives generateJavadocsJar
+    archives generateSourcesJar
 }
 
 dependencies {
