@@ -1,4 +1,4 @@
-package top.itmp.exampleapp;
+package top.itmp.rtbox.example;
 
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
