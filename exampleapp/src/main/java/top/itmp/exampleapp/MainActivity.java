@@ -12,11 +12,13 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import java.io.IOException;
+import java.util.TooManyListenersException;
 import java.util.concurrent.TimeoutException;
 
 import top.itmp.rtbox.RTBox;
 import top.itmp.rtbox.Shell;
 import top.itmp.rtbox.command.SimpleCommand;
+import top.itmp.rtbox.utils.Log;
 import top.itmp.rtbox.utils.OnRootAccessDenied;
 
 public class MainActivity extends AppCompatActivity {
@@ -83,10 +85,8 @@ public class MainActivity extends AppCompatActivity {
                 if (TextUtils.isEmpty(execString)) {
                     Toast.makeText(getApplicationContext(), "Must not be empty", Toast.LENGTH_SHORT).show();
                 } else {
-
-
+                        boolean rootAccess = false;
                     try {
-
 
                         Shell shell = Shell.startRootShell(new OnRootAccessDenied(){
                             @Override
@@ -98,6 +98,9 @@ public class MainActivity extends AppCompatActivity {
                                         .show();
                             }
                         });
+
+                        rootAccess = shell.isRootAccessGranted();
+
                         //Shell shell = Shell.startRootShell();
 
                         SimpleCommand simpleCommand = new SimpleCommand(execString);
@@ -111,6 +114,11 @@ public class MainActivity extends AppCompatActivity {
                         e.printStackTrace();
                     }catch (TimeoutException e){
                         e.printStackTrace();
+                    }
+                    Log.v(RTBox.TAG, "root: " + rootAccess);
+                    if(!rootAccess){
+                        Toast.makeText(getApplicationContext(), "No Root Access Granted", Toast.LENGTH_SHORT)
+                                .show();
                     }
                 }
             }
