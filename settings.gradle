@@ -1,1 +1,1 @@
-include ':exampleapp', ':rtbox'
+include ':rtbox_example', ':rtbox'
