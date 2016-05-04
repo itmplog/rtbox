@@ -12,7 +12,6 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import java.io.IOException;
-import java.util.TooManyListenersException;
 import java.util.concurrent.TimeoutException;
 
 import top.itmp.rtbox.RTBox;
