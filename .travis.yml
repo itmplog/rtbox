@@ -2,7 +2,9 @@
 sudo: false
 
 language: android
-jdk: oraclejdk8
+jdk: 
+    - oraclejdk7
+    - oraclejdk8
 android:
   components:
     # Uncomment the lines below if you want to
@@ -28,8 +30,8 @@ android:
     - sys-img-x86-android-23
 
 os:
-    #	- linux
-    - osx
+    - linux
+    #- osx
 
 before_script:  
     - echo no | android create avd --force -n test -t android-23 --abi armeabi-v7a
