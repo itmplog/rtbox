@@ -44,7 +44,7 @@ install {
             packaging gradle.packaging
             groupId gradle.group
             artifactId 'rtbox'
-            version gradle.versionName
+            version gradle.versionName + '.' + gradle.versionCode
 
             licenses {
                 license {
@@ -89,7 +89,7 @@ bintray {
         licenses = ['Apache-2.0']
         vcsUrl = gradle.gitUrl
         version {
-            name = gradle.versionName
+            name = gradle.versionName + '.' + gradle.versionCode
             desc = gradle.description
             vcsTag = gradle.versionCode
             labels = gradle.labels
