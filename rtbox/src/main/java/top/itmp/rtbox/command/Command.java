@@ -28,11 +28,22 @@ public abstract class Command {
         this.command = command;
     }
 
+    /**
+     * This is called from Shell after adding it
+     *
+     * @param shell
+     * @param id
+     */
     public void addToShell(Shell shell, int id) {
         this.shell = shell;
         this.id = id;
     }
 
+    /**
+     * Gets command string executed on the shell
+     *
+     * @return
+     */
     public String getCommand() {
         StringBuilder sb = new StringBuilder();
         for (int i = 0; i < command.length; i++) {
@@ -77,6 +88,11 @@ public abstract class Command {
         this.notifyAll();
     }
 
+    /**
+     * Terminate the shell cause reason
+     *
+     * @param reason
+     */
     public void terminate(String reason) {
         try {
             shell.close();
@@ -91,6 +107,11 @@ public abstract class Command {
         Log.d(RTBox.TAG, "Command " + id + " did not finish, because of " + reason);
     }
 
+    /**
+     * Waits for this command to finish and forwards exitCode into afterExecution method
+     *
+     * @throws TimeoutException
+     */
     public synchronized void waitForFinish() throws TimeoutException {
         while (!finished) {
             try {

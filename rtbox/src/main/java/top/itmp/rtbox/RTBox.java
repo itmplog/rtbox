@@ -14,7 +14,6 @@ public class RTBox {
 
     public static int defaultCommandTimeout = 10000;
 
-
     public static enum LogLevel {
         VERBOSE,
         ERROR,
@@ -22,6 +21,11 @@ public class RTBox {
         WARN
     }
 
+    /**
+     * General methord to check if user has su binary and accepts root access!
+     *
+     * @return true if root worked
+     */
     public static boolean isRootAccessGranted() {
         boolean rootAccess = false;
         try {

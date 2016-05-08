@@ -29,6 +29,14 @@ public class Shell implements Closeable {
     private static final String LD_LIBRARY_PATH = System.getenv("LD_LIBRARY_PATH");
     private static final String token = "F*D^W@#FGF";
 
+    /**
+     * Start root shell
+     *
+     * @param customEnv
+     * @param baseDirectory
+     * @return
+     * @throws IOException
+     */
     public static Shell startRootShell(ArrayList<String> customEnv, String baseDirectory)
             throws IOException {
         Log.d(RTBox.TAG, "Starting Root Shell!");
@@ -45,15 +53,38 @@ public class Shell implements Closeable {
         return shell;
     }
 
+
+    /**
+     * Start root shell without customEnv abd baseDirectory
+     *
+     * @return
+     * @throws IOException
+     */
     public static Shell startRootShell() throws IOException {
         return startRootShell(null, null);
     }
 
-    public static Shell startRootShell(OnRootAccessDenied onAccess) throws IOException{
+    /**
+     * Start root shell without customEnv abd baseDirectory
+     * Add OnRootAccessDenied Interface
+     *
+     * @param onAccess
+     * @return
+     * @throws IOException
+     */
+    public static Shell startRootShell(OnRootAccessDenied onAccess) throws IOException {
         Shell shell = new Shell(Utils.getSuPath(), null, null, onAccess);
         return shell;
     }
 
+    /**
+     * Start normal sh shell
+     *
+     * @param customEnv
+     * @param baseDirectory
+     * @return
+     * @throws IOException
+     */
     public static Shell startShell(ArrayList<String> customEnv, String baseDirectory)
             throws IOException {
         Log.d(RTBox.TAG, "Starting Shell!");
@@ -61,10 +92,25 @@ public class Shell implements Closeable {
         return shell;
     }
 
+    /**
+     * Start normal sh shell without customEnv abd baseDirectory
+     *
+     * @return
+     * @throws IOException
+     */
     public static Shell startShell() throws IOException {
         return startShell(null, null);
     }
 
+    /**
+     * Start custom shell defined by shellPath
+     *
+     * @param shellPath
+     * @param customEnv
+     * @param baseDirectory
+     * @return
+     * @throws IOException
+     */
     public static Shell startCustomShell(String shellPath, ArrayList<String> customEnv,
                                          String baseDirectory) throws IOException {
         Log.d(RTBox.TAG, "Starting Custom Shell!");
@@ -73,11 +119,18 @@ public class Shell implements Closeable {
         return shell;
     }
 
+    /**
+     * Start custom shell defined by shellPath without custom environment and base directory
+     *
+     * @param shellPath
+     * @return
+     * @throws IOException
+     */
     public static Shell startCustomShell(String shellPath) throws IOException {
         return startCustomShell(shellPath, null, null);
     }
 
-    private Shell(String shell, ArrayList<String> customEnv, String baseDirectory, OnRootAccessDenied onRootAccessDenied) throws IOException{
+    private Shell(String shell, ArrayList<String> customEnv, String baseDirectory, OnRootAccessDenied onRootAccessDenied) throws IOException {
         this.onRootAccessDenied = onRootAccessDenied;
 
         Log.d(RTBox.TAG, "Starting shell: " + shell);
@@ -107,7 +160,7 @@ public class Shell implements Closeable {
             throw new IOException("Unable to start shell, unexpected output \"" + line + "\"");
         }
 
-        if(Utils.getSuPath().equals(shell)){
+        if (Utils.getSuPath().equals(shell)) {
             isRootAccessGranted = true;
         }
 
@@ -115,7 +168,7 @@ public class Shell implements Closeable {
         new Thread(outputRunnable, "Shell Output").start();
     }
 
-    private Shell(String shell, ArrayList<String> customEnv, String baseDirectory) throws IOException{
+    private Shell(String shell, ArrayList<String> customEnv, String baseDirectory) throws IOException {
         Log.d(RTBox.TAG, "Starting shell: " + shell);
 
         process = Utils.runWithEnv(shell, customEnv, baseDirectory);
@@ -125,7 +178,7 @@ public class Shell implements Closeable {
 
         outputStream.write("echo Started\n".getBytes());
         outputStream.flush();
-        
+
         while (true) {
             String line = stdOutErr.readLine();
             if (line == null) {
@@ -143,7 +196,7 @@ public class Shell implements Closeable {
             throw new IOException("Unable to start shell, unexpected output \"" + line + "\"");
         }
 
-        if(Utils.getSuPath().equals(shell)){
+        if (Utils.getSuPath().equals(shell)) {
             isRootAccessGranted = true;
         }
 
@@ -289,6 +342,13 @@ public class Shell implements Closeable {
         Log.d(RTBox.TAG, "Shell destroyed");
     }
 
+    /**
+     * Add command to shell queue
+     *
+     * @param command
+     * @return
+     * @throws IOException
+     */
     public Command add(Command command) throws IOException {
         if (close)
             throw new IOException("Unable to add commands to a closed shell");
@@ -302,7 +362,12 @@ public class Shell implements Closeable {
         return command;
     }
 
-    public boolean isRootAccessGranted(){
+    /**
+     * return true if root access granted
+     *
+     * @return
+     */
+    public boolean isRootAccessGranted() {
         return isRootAccessGranted;
     }
 
@@ -310,6 +375,11 @@ public class Shell implements Closeable {
         return commands.size();
     }
 
+    /**
+     * Close shell
+     *
+     * @throws IOException
+     */
     @Override
     public void close() throws IOException {
         synchronized (commands) {
