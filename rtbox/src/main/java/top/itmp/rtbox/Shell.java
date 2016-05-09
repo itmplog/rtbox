@@ -160,8 +160,9 @@ public class Shell implements Closeable {
             throw new IOException("Unable to start shell, unexpected output \"" + line + "\"");
         }
 
-        if (Utils.getSuPath().equals(shell)) {
+        if (shell.contains("su")) {
             isRootAccessGranted = true;
+            Log.d(RTBox.TAG, "root access Granted!");
         }
 
         new Thread(inputRunnable, "Shell Input").start();
@@ -196,8 +197,9 @@ public class Shell implements Closeable {
             throw new IOException("Unable to start shell, unexpected output \"" + line + "\"");
         }
 
-        if (Utils.getSuPath().equals(shell)) {
+        if (shell.contains("su")) {
             isRootAccessGranted = true;
+            Log.d(RTBox.TAG, "root access Granted!");
         }
 
         new Thread(inputRunnable, "Shell Input").start();
@@ -293,6 +295,7 @@ public class Shell implements Closeable {
 
             int pos = lineStdOut.indexOf(token);
             if (pos > 0) {
+                // command output
                 command.processOutput(lineStdOut.substring(0, pos));
             }
             if (pos >= 0) {
@@ -308,6 +311,7 @@ public class Shell implements Closeable {
                     continue;
                 }
             }
+            // command id and exitCode
             command.processOutput(lineStdOut);
         }
         Log.d(RTBox.TAG, "Read all output");

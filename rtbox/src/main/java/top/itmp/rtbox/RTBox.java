@@ -12,7 +12,7 @@ public class RTBox {
     public static final String TAG = "rtbox";
     public static final String VERSION = "rtbox v0.1";
 
-    public static int defaultCommandTimeout = 10000;
+    public static int DefaultCommandTimeout = 10000;
 
     public static enum LogLevel {
         VERBOSE,

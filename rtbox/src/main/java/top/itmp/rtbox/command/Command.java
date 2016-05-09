@@ -16,13 +16,23 @@ public abstract class Command {
     boolean finished = false;
     int exitCode;
     int id;
-    int timeout = RTBox.defaultCommandTimeout;
+    int timeout = RTBox.DefaultCommandTimeout;
     Shell shell = null;
 
+    /**
+     * Constructs
+     *
+     * @param command
+     */
     public Command(String... command) {
         this.command = command;
     }
 
+    /**
+     * Constructs
+     * @param timeout
+     * @param command
+     */
     public Command(int timeout, String... command) {
         this.timeout = timeout;
         this.command = command;
@@ -30,7 +40,6 @@ public abstract class Command {
 
     /**
      * This is called from Shell after adding it
-     *
      * @param shell
      * @param id
      */
@@ -56,10 +65,19 @@ public abstract class Command {
         return sb.toString();
     }
 
+    /**
+     * This is called from shell when writing to the outputStream of shell
+     * @param out
+     * @throws IOException
+     */
     public void writeCommand(OutputStream out) throws IOException {
         out.write(getCommand().getBytes());
     }
 
+    /**
+     * Called from shell when process Output
+     * @param line
+     */
     public void processOutput(String line) {
         Log.d(RTBox.TAG, "ID: " + id + ", Output: " + line);
 
@@ -67,20 +85,42 @@ public abstract class Command {
         output(id, line);
     }
 
+    /**
+     * Called from shell when output id and output lines
+     * @param id
+     * @param line
+     */
     public abstract void output(int id, String line);
 
-    public void processAfterExecution(int exitCode) {
+    /**
+     * This will execute after command execution
+     * @param exitCode
+     */
+    private void processAfterExecution(int exitCode) {
         Log.d(RTBox.TAG, "ID: " + id + ", ExitCode: " + exitCode);
 
         afterExecution(id, exitCode);
     }
 
+    /**
+     * Called after execution
+     * @param id
+     * @param exitCode
+     */
     public abstract void afterExecution(int id, int exitCode);
 
-    public void commandFinished(int id) {
+    /**
+     * called when command Finished
+     * @param id
+     */
+    private void commandFinished(int id) {
         Log.d(RTBox.TAG, "Command " + id + " finished.");
     }
 
+    /**
+     * synchronized set Command exitCode
+     * @param code
+     */
     public synchronized void setExitCode(int code) {
         exitCode = code;
         finished = true;
@@ -102,6 +142,11 @@ public abstract class Command {
         }
     }
 
+
+    /**
+     * Called after terminate
+     * @param reason
+     */
     public void terminated(String reason) {
         setExitCode(-1);
         Log.d(RTBox.TAG, "Command " + id + " did not finish, because of " + reason);
@@ -130,4 +175,13 @@ public abstract class Command {
         processAfterExecution(exitCode);
     }
 
+    /**
+     * Waits for this command to finish and setTimeout
+     * @param timeout
+     * @throws TimeoutException
+     */
+    public synchronized void waitForFinish(int timeout) throws TimeoutException{
+        this.timeout = timeout;
+        waitForFinish();
+    }
 }
