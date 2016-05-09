@@ -30,6 +30,7 @@ public abstract class Command {
 
     /**
      * Constructs
+     *
      * @param timeout
      * @param command
      */
@@ -40,6 +41,7 @@ public abstract class Command {
 
     /**
      * This is called from Shell after adding it
+     *
      * @param shell
      * @param id
      */
@@ -67,6 +69,7 @@ public abstract class Command {
 
     /**
      * This is called from shell when writing to the outputStream of shell
+     *
      * @param out
      * @throws IOException
      */
@@ -76,6 +79,7 @@ public abstract class Command {
 
     /**
      * Called from shell when process Output
+     *
      * @param line
      */
     public void processOutput(String line) {
@@ -87,6 +91,7 @@ public abstract class Command {
 
     /**
      * Called from shell when output id and output lines
+     *
      * @param id
      * @param line
      */
@@ -94,6 +99,7 @@ public abstract class Command {
 
     /**
      * This will execute after command execution
+     *
      * @param exitCode
      */
     private void processAfterExecution(int exitCode) {
@@ -104,6 +110,7 @@ public abstract class Command {
 
     /**
      * Called after execution
+     *
      * @param id
      * @param exitCode
      */
@@ -111,6 +118,7 @@ public abstract class Command {
 
     /**
      * called when command Finished
+     *
      * @param id
      */
     private void commandFinished(int id) {
@@ -119,6 +127,7 @@ public abstract class Command {
 
     /**
      * synchronized set Command exitCode
+     *
      * @param code
      */
     public synchronized void setExitCode(int code) {
@@ -145,6 +154,7 @@ public abstract class Command {
 
     /**
      * Called after terminate
+     *
      * @param reason
      */
     public void terminated(String reason) {
@@ -177,10 +187,11 @@ public abstract class Command {
 
     /**
      * Waits for this command to finish and setTimeout
+     *
      * @param timeout
      * @throws TimeoutException
      */
-    public synchronized void waitForFinish(int timeout) throws TimeoutException{
+    public synchronized void waitForFinish(int timeout) throws TimeoutException {
         this.timeout = timeout;
         waitForFinish();
     }

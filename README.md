@@ -1,7 +1,8 @@
 RTBox (RootBox)
 ===============
 
-[![Travis](https://travis-ci.org/odemolliens/RootTools.svg?branch=master)](https://travis-ci.org/odemolliens/RootTools.svg?branch=master)
+[![Build Status](https://travis-ci.org/nullog/rtbox.svg?branch=master)](https://travis-ci.org/nullog/rtbox)
+[![Circle CI](https://circleci.com/gh/nullog/rtbox.svg?style=svg)](https://circleci.com/gh/nullog/rtbox)
 
 This ia a library to simplify the usage of root exec on the Android OS.It is a Java wrapper around native binaries shipped with every Android OS, but can also be used to package and execute your own native binaries.
 

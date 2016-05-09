@@ -1,0 +1,31 @@
+machine:
+    java:
+        # oraclejdk8 openjdk8 openjdk7
+        version: openjdk8
+    environment:
+        ANDROID_HOME: /usr/local/android-sdk-linux
+
+## dependencies
+dependencies:
+    override:
+        - echo y | android update sdk --no-ui --all --filter "tools"
+        - echo y | android update sdk --no-ui --all --filter "build-tools-23.0.3"
+        - echo y | android update sdk --no-ui --all --filter "platform-tools"
+        - echo y | android update sdk --no-ui --all --filter "tools"
+        - echo y | android update sdk --no-ui --all --filter "android-23"
+        - echo y | android update sdk --no-ui --all --filter "extra-android-m2repository"
+        - echo y | android update sdk --no-ui --all --filter "extra-android-support"
+        - echo y | android update sdk --no-ui --all --filter "extra-google-m2repository"
+        - echo y | android update sdk --no-ui --all --filter "extra-google-google_play_services"
+        - echo y | android update sdk --no-ui --all --filter "sys-img-armeabi-v7a-android-23"
+        #- echo y | android update sdk --no-ui --all --filter "sys-img-x86-android-23"
+        - ./gradle dependencies
+
+test:
+    override:
+        - echo no | android create avd --force -n test -t android-23 --abi armeabi-v7a
+        - emulator -avd test -no-skin -no-audio -no-window &
+        - adb wait-for-device
+        - adb shell input keyevent 82 &
+        - ./gradlew clean build connectedCheck
+        - cp -r rtbox/build/outputs $CIRCLE_ARTIFACTS

@@ -32,7 +32,7 @@ public class RTBox {
             Shell rootShell = Shell.startRootShell();
             rootAccess = rootShell.isRootAccessGranted();
             rootShell.close();
-        }catch (IOException e){
+        } catch (IOException e) {
             Log.w(TAG, "Root Access Not Granted!!", e);
         }
 

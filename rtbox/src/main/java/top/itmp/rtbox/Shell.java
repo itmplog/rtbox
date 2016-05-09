@@ -132,6 +132,15 @@ public class Shell implements Closeable {
         return startCustomShell(shellPath, null, null);
     }
 
+    /**
+     * Constructs instance of shell
+     *
+     * @param shell
+     * @param customEnv
+     * @param baseDirectory
+     * @param onRootAccessDenied
+     * @throws IOException
+     */
     private Shell(String shell, ArrayList<String> customEnv, String baseDirectory, OnRootAccessDenied onRootAccessDenied) throws IOException {
         this.onRootAccessDenied = onRootAccessDenied;
 
@@ -171,6 +180,14 @@ public class Shell implements Closeable {
         new Thread(outputRunnable, "Shell Output").start();
     }
 
+    /**
+     * Constructs
+     *
+     * @param shell
+     * @param customEnv
+     * @param baseDirectory
+     * @throws IOException
+     */
     private Shell(String shell, ArrayList<String> customEnv, String baseDirectory) throws IOException {
         Log.d(RTBox.TAG, "Starting shell: " + shell);
 
@@ -230,6 +247,11 @@ public class Shell implements Closeable {
         }
     };
 
+    /**
+     * write all commands to shell one by one
+     *
+     * @throws IOException
+     */
     private void writeCommands() throws IOException {
         try {
             int commandIndex = 0;
@@ -331,6 +353,9 @@ public class Shell implements Closeable {
         }
     }
 
+    /**
+     * estroyShellProcess
+     */
     private void destroyShellProcess() {
         try {
             // Yes, this really is the way to check if the process is
