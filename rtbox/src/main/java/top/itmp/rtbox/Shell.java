@@ -1,5 +1,7 @@
 package top.itmp.rtbox;
 
+import android.text.TextUtils;
+
 import java.io.BufferedReader;
 import java.io.Closeable;
 import java.io.DataOutputStream;
@@ -302,7 +304,7 @@ public class Shell implements Closeable {
                 lineStdOut = lineStdOut.substring(pos);
                 String fields[] = lineStdOut.split(" ");
                 int id = Integer.parseInt(fields[1]);
-                if (id == commandIndex) {
+                if (id == commandIndex && TextUtils.isDigitsOnly(fields[2])) {
                     command.setExitCode(Integer.parseInt(fields[2]));
 
                     // go to next command
