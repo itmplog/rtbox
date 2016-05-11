@@ -1,143 +1,69 @@
 package top.itmp.rtbox.example;
 
-import android.support.v7.app.AlertDialog;
-import android.support.v7.app.AppCompatActivity;
+import android.graphics.Color;
 import android.os.Bundle;
-import android.text.TextUtils;
-import android.view.View;
-import android.widget.Button;
-import android.widget.EditText;
-import android.widget.ScrollView;
-import android.widget.TextView;
-import android.widget.Toast;
+import android.support.design.widget.TabLayout;
+import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentManager;
+import android.support.v4.app.FragmentPagerAdapter;
+import android.support.v4.util.Pair;
+import android.support.v4.view.PagerTabStrip;
+import android.support.v4.view.ViewPager;
+import android.support.v7.app.AppCompatActivity;
+import android.util.TypedValue;
 
-import java.io.IOException;
-import java.util.concurrent.TimeoutException;
+import java.util.ArrayList;
+import java.util.List;
 
-import top.itmp.rtbox.RTBox;
-import top.itmp.rtbox.Shell;
-import top.itmp.rtbox.command.SimpleCommand;
-import top.itmp.rtbox.utils.Log;
-import top.itmp.rtbox.utils.OnRootAccessDenied;
 
+/**
+ * Created by hz on 16/5/11.
+ */
 public class MainActivity extends AppCompatActivity {
-
-    private ScrollView scrollView;
-    private TextView content;
-    private EditText execContent;
-    private Button exec;
-    private Button superExec;
-    private Button checkRootAccess;
+    private ViewPager viewPager;
+    private PagerTabStrip tabs;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        scrollView = (ScrollView)findViewById(R.id.scrollView);
-        content = (TextView)findViewById(R.id.textView);
-        execContent = (EditText)findViewById(R.id.execContent);
-        exec = (Button)findViewById(R.id.exec);
-        superExec = (Button)findViewById(R.id.execSuper);
-        checkRootAccess = (Button)findViewById(R.id.checkRootAccess);
+        viewPager = (ViewPager)findViewById(R.id.viewpager);
+        MainPagerAdapter pagerAdapter = new MainPagerAdapter(getSupportFragmentManager());
+        pagerAdapter.add(new FragmentNormal(), "normal");
+        pagerAdapter.add(new FramentNew(), "exec");
 
-        RTBox.DebugMode = true;
+        viewPager.setAdapter(pagerAdapter);
+        tabs = (PagerTabStrip) findViewById(R.id.tabs);
+        tabs.setTextSize(TypedValue.COMPLEX_UNIT_SP, 18);
+        tabs.setTextColor(Color.WHITE);
 
-        exec.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                String execString = execContent.getText().toString();
+    }
 
-                if(TextUtils.isEmpty(execString)){
-                    Toast.makeText(getApplicationContext(), "Must not be empty", Toast.LENGTH_SHORT).show();
-                }else{
-                    try {
-                        Shell shell = Shell.startShell();
-                        SimpleCommand simpleCommand = new SimpleCommand(execString);
-                        shell.add(simpleCommand).waitForFinish();
+    private static class MainPagerAdapter extends FragmentPagerAdapter{
+        private List<Pair<Fragment, String>> fragments = new ArrayList<>();
 
-                        content.append(simpleCommand.getOutput() +"return: " + simpleCommand.getExitCode());
+        public void add(Fragment fragment, String title){
+            fragments.add(new Pair(fragment, title));
+        }
 
-                        scrollView.post(new Runnable() {
-                            @Override
-                            public void run() {
-                                scrollView.fullScroll(View.FOCUS_DOWN);
-                            }
-                        });
+        public MainPagerAdapter(FragmentManager fm){
+            super(fm);
+        }
 
-                        shell.close();
-                    }catch (IOException e){
-                        e.printStackTrace();
-                    }catch (TimeoutException e){
-                        e.printStackTrace();
-                    }
-                }
+        @Override
+        public Fragment getItem(int position) {
+            return fragments.get(position).first;
+        }
 
-            }
-        });
+        @Override
+        public int getCount() {
+            return fragments.size();
+        }
 
-        superExec.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                String execString = execContent.getText().toString();
-
-                if (TextUtils.isEmpty(execString)) {
-                    Toast.makeText(getApplicationContext(), "Must not be empty", Toast.LENGTH_SHORT).show();
-                } else {
-                        boolean rootAccess = false;
-                    try {
-
-                        Shell shell = Shell.startRootShell(new OnRootAccessDenied(){
-                            @Override
-                            public void onDenied() {
-                                new AlertDialog.Builder(MainActivity.this)
-                                        .setTitle("Root Access")
-                                        .setMessage("Root Access Has Been Denied!!")
-                                        .setPositiveButton(android.R.string.ok, null)
-                                        .show();
-                            }
-                        });
-
-                        rootAccess = shell.isRootAccessGranted();
-
-                        //Shell shell = Shell.startRootShell();
-
-                        SimpleCommand simpleCommand = new SimpleCommand(execString);
-
-                        shell.add(simpleCommand).waitForFinish();
-
-                        content.setText(simpleCommand.getOutput());
-
-                        shell.close();
-                    } catch (IOException e) {
-                        e.printStackTrace();
-                    }catch (TimeoutException e){
-                        e.printStackTrace();
-                    }
-                    Log.v(RTBox.TAG, "root: " + rootAccess);
-                    if(!rootAccess){
-                        Toast.makeText(getApplicationContext(), "No Root Access Granted", Toast.LENGTH_SHORT)
-                                .show();
-                    }
-                }
-            }
-        });
-
-        checkRootAccess.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-
-                AlertDialog.Builder builder = new AlertDialog.Builder(MainActivity.this)
-                        .setTitle("Root Access")
-                        .setPositiveButton(android.R.string.ok, null);
-                if(RTBox.isRootAccessGranted()){
-                    builder.setMessage("Granted")
-                            .show();
-                }else{
-                    builder.setMessage("Not Granted")
-                            .show();
-                }
-            }
-        });
+        @Override
+        public CharSequence getPageTitle(int position) {
+            return fragments.get(position).second;
+        }
     }
 }

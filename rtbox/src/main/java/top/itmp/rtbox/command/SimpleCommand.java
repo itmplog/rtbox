@@ -1,6 +1,6 @@
 package top.itmp.rtbox.command;
 
-import top.itmp.rtbox.RTBox;
+import top.itmp.rtbox.RtBox;
 import top.itmp.rtbox.utils.Log;
 
 /**
@@ -16,7 +16,7 @@ public class SimpleCommand extends Command {
 
     @Override
     public void output(int id, String line) {
-        Log.v(RTBox.TAG, line + "    " + id);
+        Log.v(RtBox.TAG, line + "    " + id);
         sb.append(line).append('\n');
     }
 

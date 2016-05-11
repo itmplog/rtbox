@@ -7,8 +7,10 @@ import java.io.Closeable;
 import java.io.DataOutputStream;
 import java.io.IOException;
 import java.io.InputStreamReader;
+import java.sql.Time;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.concurrent.TimeoutException;
 
 import top.itmp.rtbox.command.Command;
 import top.itmp.rtbox.utils.Log;
@@ -41,7 +43,7 @@ public class Shell implements Closeable {
      */
     public static Shell startRootShell(ArrayList<String> customEnv, String baseDirectory)
             throws IOException {
-        Log.d(RTBox.TAG, "Starting Root Shell!");
+        Log.d(RtBox.TAG, "Starting Root Shell!");
 
         // On some versions of Android (ICS) LD_LIBRARY_PATH is unset when using su
         // We need to pass LD_LIBRARY_PATH over su for some commands to work correctly.
@@ -89,7 +91,7 @@ public class Shell implements Closeable {
      */
     public static Shell startShell(ArrayList<String> customEnv, String baseDirectory)
             throws IOException {
-        Log.d(RTBox.TAG, "Starting Shell!");
+        Log.d(RtBox.TAG, "Starting Shell!");
         Shell shell = new Shell("sh", customEnv, baseDirectory);
         return shell;
     }
@@ -100,8 +102,13 @@ public class Shell implements Closeable {
      * @return
      * @throws IOException
      */
-    public static Shell startShell() throws IOException {
-        return startShell(null, null);
+    public static Shell startShell() {
+        try {
+            return startShell(null, null);
+        }catch (IOException e){
+            Log.e(RtBox.TAG, "IOException when starting Shell", e);
+            return null;
+        }
     }
 
     /**
@@ -115,7 +122,7 @@ public class Shell implements Closeable {
      */
     public static Shell startCustomShell(String shellPath, ArrayList<String> customEnv,
                                          String baseDirectory) throws IOException {
-        Log.d(RTBox.TAG, "Starting Custom Shell!");
+        Log.d(RtBox.TAG, "Starting Custom Shell!");
         Shell shell = new Shell(shellPath, customEnv, baseDirectory);
 
         return shell;
@@ -144,7 +151,7 @@ public class Shell implements Closeable {
     private Shell(String shell, ArrayList<String> customEnv, String baseDirectory, OnRootAccessDenied onRootAccessDenied) throws IOException {
         this.onRootAccessDenied = onRootAccessDenied;
 
-        Log.d(RTBox.TAG, "Starting shell: " + shell);
+        Log.d(RtBox.TAG, "Starting shell: " + shell);
 
         process = Utils.runWithEnv(shell, customEnv, baseDirectory);
 
@@ -173,7 +180,7 @@ public class Shell implements Closeable {
 
         if (shell.contains("su")) {
             isRootAccessGranted = true;
-            Log.d(RTBox.TAG, "root access Granted!");
+            Log.d(RtBox.TAG, "root access Granted!");
         }
 
         new Thread(inputRunnable, "Shell Input").start();
@@ -189,7 +196,7 @@ public class Shell implements Closeable {
      * @throws IOException
      */
     private Shell(String shell, ArrayList<String> customEnv, String baseDirectory) throws IOException {
-        Log.d(RTBox.TAG, "Starting shell: " + shell);
+        Log.d(RtBox.TAG, "Starting shell: " + shell);
 
         process = Utils.runWithEnv(shell, customEnv, baseDirectory);
 
@@ -218,7 +225,7 @@ public class Shell implements Closeable {
 
         if (shell.contains("su")) {
             isRootAccessGranted = true;
-            Log.d(RTBox.TAG, "root access Granted!");
+            Log.d(RtBox.TAG, "root access Granted!");
         }
 
         new Thread(inputRunnable, "Shell Input").start();
@@ -230,7 +237,7 @@ public class Shell implements Closeable {
             try {
                 writeCommands();
             } catch (IOException e) {
-                Log.e(RTBox.TAG, "IO Exception", e);
+                Log.e(RtBox.TAG, "IO Exception", e);
             }
         }
     };
@@ -240,9 +247,9 @@ public class Shell implements Closeable {
             try {
                 readOutput();
             } catch (IOException e) {
-                Log.e(RTBox.TAG, "IOException", e);
+                Log.e(RtBox.TAG, "IOException", e);
             } catch (InterruptedException e) {
-                Log.e(RTBox.TAG, "InterruptedException", e);
+                Log.e(RtBox.TAG, "InterruptedException", e);
             }
         }
     };
@@ -273,7 +280,7 @@ public class Shell implements Closeable {
                 } else if (close) {
                     out.write("\nexit 0\n".getBytes());
                     out.flush();
-                    Log.d(RTBox.TAG, "Closing shell");
+                    Log.d(RtBox.TAG, "Closing shell");
                     process.waitFor();
                     out.close();
                     return;
@@ -282,7 +289,7 @@ public class Shell implements Closeable {
                 }
             }
         } catch (InterruptedException e) {
-            Log.e(RTBox.TAG, "interrupted while writing command", e);
+            Log.e(RtBox.TAG, "interrupted while writing command", e);
         }
     }
 
@@ -338,7 +345,7 @@ public class Shell implements Closeable {
             // command id and exitCode
             command.processOutput(lineStdOut);
         }
-        Log.d(RTBox.TAG, "Read all output");
+        Log.d(RtBox.TAG, "Read all output");
         process.waitFor();
         stdOutErr.close();
         destroyShellProcess();
@@ -370,7 +377,7 @@ public class Shell implements Closeable {
             process.destroy();
         }
 
-        Log.d(RTBox.TAG, "Shell destroyed");
+        Log.d(RtBox.TAG, "Shell destroyed");
     }
 
     /**
@@ -393,6 +400,16 @@ public class Shell implements Closeable {
         return command;
     }
 
+    public void run(Command command){
+        try {
+            add(command);
+            command.waitForFinish();
+        }catch (IOException e){
+            Log.w(RtBox.TAG, "Unable to add commands to a closed shell", e);
+        }catch (TimeoutException e){
+            Log.w(RtBox.TAG, "Timeout when exec command: " + command.getCommand(), e);
+        }
+    }
     /**
      * return true if root access granted
      *

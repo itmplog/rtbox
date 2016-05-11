@@ -1,6 +1,6 @@
 package top.itmp.rtbox.utils;
 
-import top.itmp.rtbox.RTBox;
+import top.itmp.rtbox.RtBox;
 
 /**
  * Created by hz on 2016/5/2.
@@ -8,37 +8,37 @@ import top.itmp.rtbox.RTBox;
 public final class Log {
 
     public static void v(String tag, String msg){
-        if(RTBox.DebugMode){
+        if(RtBox.DebugMode){
             android.util.Log.v(tag, msg);
         }
     }
 
     public static void v(String tag, String msg, Throwable tr){
-        if(RTBox.DebugMode){
+        if(RtBox.DebugMode){
             android.util.Log.v(tag, msg, tr);
         }
     }
 
     public static void d(String tag, String msg){
-        if(RTBox.DebugMode){
+        if(RtBox.DebugMode){
             android.util.Log.d(tag, msg);
         }
     }
 
     public static void d(String tag, String msg, Throwable tr){
-        if(RTBox.DebugMode){
+        if(RtBox.DebugMode){
             android.util.Log.d(tag, msg, tr);
         }
     }
 
     public static void i(String tag, String msg){
-        if(RTBox.DebugMode){
+        if(RtBox.DebugMode){
             android.util.Log.i(tag, msg);
         }
     }
 
     public static void i(String tag, String msg, Throwable tr){
-        if(RTBox.DebugMode){
+        if(RtBox.DebugMode){
             android.util.Log.i(tag, msg, tr);
         }
     }

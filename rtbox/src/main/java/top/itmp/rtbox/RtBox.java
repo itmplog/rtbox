@@ -7,7 +7,7 @@ import top.itmp.rtbox.utils.Log;
 /**
  * Created by hz on 2016/5/2.
  */
-public class RTBox {
+public class RtBox {
     public static boolean DebugMode = false;
     public static final String TAG = "rtbox";
     public static final String VERSION = "rtbox v0.1";

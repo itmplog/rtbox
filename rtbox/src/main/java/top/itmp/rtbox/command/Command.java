@@ -4,7 +4,7 @@ import java.io.IOException;
 import java.io.OutputStream;
 import java.util.concurrent.TimeoutException;
 
-import top.itmp.rtbox.RTBox;
+import top.itmp.rtbox.RtBox;
 import top.itmp.rtbox.Shell;
 import top.itmp.rtbox.utils.Log;
 
@@ -16,7 +16,7 @@ public abstract class Command {
     boolean finished = false;
     int exitCode;
     int id;
-    int timeout = RTBox.DefaultCommandTimeout;
+    int timeout = RtBox.DefaultCommandTimeout;
     Shell shell = null;
 
     /**
@@ -51,6 +51,15 @@ public abstract class Command {
     }
 
     /**
+     * exec this command immediately
+     * @param shell
+     * @throws TimeoutException
+     */
+    public void exec(Shell shell){
+        this.shell = shell;
+        shell.run(this);
+    }
+    /**
      * Gets command string executed on the shell
      *
      * @return
@@ -63,7 +72,7 @@ public abstract class Command {
             sb.append("2>&1");
             sb.append('\n');
         }
-        Log.d(RTBox.TAG, "Sending command(s): " + sb.toString());
+        Log.d(RtBox.TAG, "Sending command(s): " + sb.toString());
         return sb.toString();
     }
 
@@ -83,7 +92,7 @@ public abstract class Command {
      * @param line
      */
     public void processOutput(String line) {
-        Log.d(RTBox.TAG, "ID: " + id + ", Output: " + line);
+        Log.d(RtBox.TAG, "ID: " + id + ", Output: " + line);
 
         // now execute specific output parsing
         output(id, line);
@@ -103,7 +112,7 @@ public abstract class Command {
      * @param exitCode
      */
     private void processAfterExecution(int exitCode) {
-        Log.d(RTBox.TAG, "ID: " + id + ", ExitCode: " + exitCode);
+        Log.d(RtBox.TAG, "ID: " + id + ", ExitCode: " + exitCode);
 
         afterExecution(id, exitCode);
     }
@@ -122,7 +131,7 @@ public abstract class Command {
      * @param id
      */
     private void commandFinished(int id) {
-        Log.d(RTBox.TAG, "Command " + id + " finished.");
+        Log.d(RtBox.TAG, "Command " + id + " finished.");
     }
 
     /**
@@ -145,7 +154,7 @@ public abstract class Command {
     public void terminate(String reason) {
         try {
             shell.close();
-            Log.d(RTBox.TAG, "Terminating the shell.");
+            Log.d(RtBox.TAG, "Terminating the shell.");
             terminated(reason);
         } catch (IOException e) {
         }
@@ -159,7 +168,7 @@ public abstract class Command {
      */
     public void terminated(String reason) {
         setExitCode(-1);
-        Log.d(RTBox.TAG, "Command " + id + " did not finish, because of " + reason);
+        Log.d(RtBox.TAG, "Command " + id + " did not finish, because of " + reason);
     }
 
     /**
@@ -172,7 +181,7 @@ public abstract class Command {
             try {
                 this.wait(timeout);
             } catch (InterruptedException e) {
-                Log.e(RTBox.TAG, "InterruptedException in waitForFinish()", e);
+                Log.e(RtBox.TAG, "InterruptedException in waitForFinish()", e);
             }
 
             if (!finished) {
