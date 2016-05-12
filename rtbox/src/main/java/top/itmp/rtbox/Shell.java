@@ -359,9 +359,6 @@ public class Shell implements Closeable {
         }
     }
 
-    /**
-     * estroyShellProcess
-     */
     private void destroyShellProcess() {
         try {
             // Yes, this really is the way to check if the process is
@@ -399,6 +396,11 @@ public class Shell implements Closeable {
         return command;
     }
 
+    /**
+     * Run the command
+     *
+     * @param command
+     */
     public void run(Command command) {
         try {
             add(command);
@@ -419,6 +421,9 @@ public class Shell implements Closeable {
         return isRootAccessGranted;
     }
 
+    /**
+     * @return Commands size
+     */
     public int getCommandsSize() {
         return commands.size();
     }

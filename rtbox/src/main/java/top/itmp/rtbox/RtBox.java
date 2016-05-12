@@ -10,7 +10,7 @@ import top.itmp.rtbox.utils.Log;
 public class RtBox {
     public static boolean DebugMode = false;
     public static final String TAG = "rtbox";
-    public static final String VERSION = "rtbox" + " v" + BuildConfig.VERSION_NAME + '.' + BuildConfig.VERSION_CODE;
+    //public static final String VERSION = "rtbox" + " v" + BuildConfig.VERSION_NAME + '.' + BuildConfig.VERSION_CODE;
 
     public static int DefaultCommandTimeout = 10000;
 
