@@ -10,7 +10,7 @@ This ia a library to simplify the usage of root exec on the Android OS.It is a J
 Use library as Gradle dependency
 ================================
 
-1. Download The Last AAR: 
+1. The Last VERSION: 
 [ ![Download](https://api.bintray.com/packages/itmp/top/top.itmp.rtbox/images/download.svg) ](https://bintray.com/itmp/top/top.itmp.rtbox/_latestVersion)
 
 2.  Gradle:
@@ -27,7 +27,43 @@ Use library as Gradle dependency
       <type>pom</type>
     </dependency>
     ```
-Snapshots of devlopment version are not available for now.
+
+4. Snapshots:
+	- Add it in your root build.gradle at the end of repositories:
+	```
+	allprojects {
+		repositories {
+			...
+				maven { url "https://jitpack.io" }
+		}
+	}
+	```
+	- Add the dependency
+	```
+	dependencies {
+		compile 'com.github.nullog:rtbox:-SNAPSHOT'
+	}
+	```
+	[![](https://jitpack.io/v/nullog/rtbox.svg)](https://jitpack.io/#nullog/rtbox)
+	[Download The Last AAR](https://jitpack.io/com/github/nullog/rtbox/-SNAPSHOW/rtbox--SNAPSHOT.aar)
+	> How to use the last aar:
+	* Add it in your `app` build.gradle at the end of repositories: 
+		```
+		repositories {
+			flatDir {
+				dirs 'libs'
+			}
+			...
+		}
+		```
+	* add dependencies:
+		```
+		dependencies {
+			compile(name:'rtbox--SNAPSHOT', ext:'aar')
+				...
+		}
+		```
+
 
 Contribute
 ==========
@@ -43,9 +79,9 @@ Authors
 =======
 
 RTBox is based on serveral other open source projects:
-- Dominik Sch√ºrmann (RootCommands)
+- Dominik Sch®πrmann (RootCommands)
 - Stephen Erickson, Chris Ravenscroft, Adam Shanks, Jeremy Lakeman (RootTools)
-- Michael Elsd√∂rfer (Android Autostarts)
+- Michael Elsdrfer (Android Autostarts)
 
 License
 =======
@@ -61,5 +97,6 @@ License
     WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
     See the License for the specific language governing permissions and
     limitations under the License.
+
 
 
