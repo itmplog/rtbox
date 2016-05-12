@@ -52,13 +52,14 @@ public abstract class Command {
 
     /**
      * exec this command immediately
+     *
      * @param shell
-     * @throws TimeoutException
      */
-    public void exec(Shell shell){
+    public void exec(Shell shell) {
         this.shell = shell;
         shell.run(this);
     }
+
     /**
      * Gets command string executed on the shell
      *

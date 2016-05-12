@@ -7,7 +7,6 @@ import java.io.Closeable;
 import java.io.DataOutputStream;
 import java.io.IOException;
 import java.io.InputStreamReader;
-import java.sql.Time;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.TimeoutException;
@@ -96,16 +95,16 @@ public class Shell implements Closeable {
         return shell;
     }
 
+
     /**
      * Start normal sh shell without customEnv abd baseDirectory
      *
      * @return
-     * @throws IOException
      */
     public static Shell startShell() {
         try {
             return startShell(null, null);
-        }catch (IOException e){
+        } catch (IOException e) {
             Log.e(RtBox.TAG, "IOException when starting Shell", e);
             return null;
         }
@@ -400,16 +399,17 @@ public class Shell implements Closeable {
         return command;
     }
 
-    public void run(Command command){
+    public void run(Command command) {
         try {
             add(command);
             command.waitForFinish();
-        }catch (IOException e){
+        } catch (IOException e) {
             Log.w(RtBox.TAG, "Unable to add commands to a closed shell", e);
-        }catch (TimeoutException e){
+        } catch (TimeoutException e) {
             Log.w(RtBox.TAG, "Timeout when exec command: " + command.getCommand(), e);
         }
     }
+
     /**
      * return true if root access granted
      *
