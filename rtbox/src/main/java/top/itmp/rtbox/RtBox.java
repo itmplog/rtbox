@@ -8,9 +8,9 @@ import top.itmp.rtbox.utils.Log;
  * Created by hz on 2016/5/2.
  */
 public class RtBox {
-    public static boolean DebugMode = false;
+    public static boolean DebugMode = BuildConfig.DEBUG;
     public static final String TAG = "rtbox";
-    //public static final String VERSION = "rtbox" + " v" + BuildConfig.VERSION_NAME + '.' + BuildConfig.VERSION_CODE;
+    public static final String VERSION = "rtbox" + " v" + BuildConfig.VERSION_NAME + '.' + BuildConfig.VERSION_CODE;
 
     public static int DefaultCommandTimeout = 10000;
 

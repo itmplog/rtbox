@@ -109,6 +109,7 @@ task generateJavadocs(type: Javadoc) {
     options {
         encoding "utf-8"
     }
+    include '**/BuildConfig.java'
     //exclude '**/BuildConfig.java'
     //exclude '**/R.java'
 }
