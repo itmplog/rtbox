@@ -35,7 +35,7 @@ public class FragmentBin extends Fragment {
         RtBox.DebugMode = true;
         final Shell shell = Shell.startShell();
         final RtBox rtBox = new RtBox(shell);
-        final SimpleBinCommand simpleBinCommand = new SimpleBinCommand(getActivity(), "hello", null);
+        final SimpleBinCommand simpleBinCommand = new SimpleBinCommand(getActivity(), "hello");
 
         Button execBin = new Button(getActivity());
         execBin.setLayoutParams(new ViewGroup.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT));
@@ -46,13 +46,13 @@ public class FragmentBin extends Fragment {
                 shell.run(simpleBinCommand);
 
                 try {
-                    boolean isRunning = rtBox.isProcessRunning(simpleBinCommand.getCommand());
+                    boolean isRunning = rtBox.isProcessRunning(simpleBinCommand.getCommandLine());
                     textView.setText(simpleBinCommand.getCommand() + (isRunning ? "running: \n": "not running\n"));
 
                     if(isRunning){
-                        ArrayList<String> pids = rtBox.getPids(simpleBinCommand.getCommand());
+                        ArrayList<String> pids = rtBox.getPids(simpleBinCommand.getCommandLine());
                         for(String pid: pids){
-                            textView.append(pid);
+                            textView.append(pid + ' ');
                         }
                     }
                 }catch (IOException e){
@@ -64,15 +64,15 @@ public class FragmentBin extends Fragment {
             }
         });
 
-        Button checkBin = new Button(getActivity());
-        checkBin.setLayoutParams(new ViewGroup.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT));
-        checkBin.setText("killBin");
-        checkBin.setOnClickListener(new View.OnClickListener() {
+        Button killAllBin = new Button(getActivity());
+        killAllBin.setLayoutParams(new ViewGroup.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT));
+        killAllBin.setText("killAllBin");
+        killAllBin.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 try {
-                    if(rtBox.isProcessRunning(simpleBinCommand.getCommand())){
-                       textView.setText(rtBox.killAll(simpleBinCommand.getCommand()) ? "killed" : "kill failed");
+                    if(rtBox.isProcessRunning(simpleBinCommand.getCommandLine())){
+                       textView.setText(rtBox.killAll(simpleBinCommand.getCommandLine()) ? "killed" : "kill failed");
                     }
                 }catch (IOException e){
                     e.printStackTrace();
@@ -84,7 +84,7 @@ public class FragmentBin extends Fragment {
 
         rootView.addView(textView);
         rootView.addView(execBin);
-        rootView.addView(checkBin);
+        rootView.addView(killAllBin);
         return rootView;
     }
 }
