@@ -44,6 +44,7 @@ public class RtBox {
         this.shell = shell;
     }
 
+
     /**
      * General methord to check if user has su binary and accepts root access!
      *
@@ -61,6 +62,22 @@ public class RtBox {
 
         return rootAccess;
     }
+
+    /**
+     * get pids of process name
+     *
+     * @param processName process name
+     * @return " " if pids is empty.
+     * @throws IOException
+     * @throws TimeoutException
+     */
+    public ArrayList<String> getPids(String processName) throws IOException, TimeoutException {
+        PsCommand psCommand = new PsCommand(processName);
+        shell.add(psCommand).waitForFinish();
+
+        return psCommand.getPids();
+    }
+
 
     /**
      * This method can be used to kill a running process
