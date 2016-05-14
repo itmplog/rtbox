@@ -32,4 +32,6 @@ test:
           #- adb wait-for-device
           #- adb shell input keyevent 82 &
         - ./gradlew clean build connectedCheck
-        - cp -r rtbox/build/outputs $CIRCLE_ARTIFACTS
+        - adb install rtbox_example/build/outputs/apk/rtbox_example-debug.apk
+        - cp -r rtbox/build/outputs/aar $CIRCLE_ARTIFACTS
+        - cp -r rtbox_example/build/outputs/apk $CIRCLE_ARTIFACTS
