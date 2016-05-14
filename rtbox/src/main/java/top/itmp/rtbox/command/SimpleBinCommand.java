@@ -12,6 +12,10 @@ public class SimpleBinCommand extends BinCommand {
         super(context, binName, parameters);
     }
 
+    public SimpleBinCommand(Context context, String binName) {
+        super(context, binName);
+    }
+
     @Override
     public void output(int id, String line) {
         sb.append(line).append('\n');
