@@ -3,6 +3,7 @@ package top.itmp.rtbox.example;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
+import android.support.v7.app.AlertDialog;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -55,6 +56,13 @@ public class FramentNew extends Fragment {
                     e.printStackTrace();
                 }
                 simpleCommand2.exec(shell);
+
+                new AlertDialog.Builder(getActivity())
+                        .setTitle("Output")
+                        .setMessage(simpleCommand.getCommand() + ": " + simpleCommand.getOutput() + "\n" +
+                        simpleCommand1.getCommand() + ": " + simpleCommand1.getOutput() + "\n" +
+                        simpleCommand2.getCommand() + ": " + simpleCommand2.getOutput() + "\n")
+                        .show();
             }
         });
 

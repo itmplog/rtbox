@@ -32,6 +32,7 @@ public class MainActivity extends AppCompatActivity {
         MainPagerAdapter pagerAdapter = new MainPagerAdapter(getSupportFragmentManager());
         pagerAdapter.add(new FragmentNormal(), "normal");
         pagerAdapter.add(new FramentNew(), "exec");
+        pagerAdapter.add(new FragmentBin(), "binTest");
 
         viewPager.setAdapter(pagerAdapter);
         tabs = (PagerTabStrip) findViewById(R.id.tabs);
