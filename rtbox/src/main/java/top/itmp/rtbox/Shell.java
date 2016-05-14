@@ -21,6 +21,8 @@ import top.itmp.rtbox.utils.Utils;
  * Created by hz on 2016/5/2.
  */
 public class Shell implements Closeable {
+    private static final String LD_LIBRARY_PATH = System.getenv("LD_LIBRARY_PATH");
+    private static final String token = "F*D^W@#FGF";
     private final Process process;
     private final BufferedReader stdOutErr;
     private final DataOutputStream outputStream;
@@ -28,115 +30,26 @@ public class Shell implements Closeable {
     private OnRootAccessDenied onRootAccessDenied;
     private boolean isRootAccessGranted = false;
     private boolean close = false;
-
-    private static final String LD_LIBRARY_PATH = System.getenv("LD_LIBRARY_PATH");
-    private static final String token = "F*D^W@#FGF";
-
-    /**
-     * Start root shell
-     *
-     * @param customEnv
-     * @param baseDirectory
-     * @return
-     * @throws IOException
-     */
-    public static Shell startRootShell(ArrayList<String> customEnv, String baseDirectory)
-            throws IOException {
-        Log.d(RtBox.TAG, "Starting Root Shell!");
-
-        // On some versions of Android (ICS) LD_LIBRARY_PATH is unset when using su
-        // We need to pass LD_LIBRARY_PATH over su for some commands to work correctly.
-        if (customEnv == null) {
-            customEnv = new ArrayList<String>();
+    private Runnable inputRunnable = new Runnable() {
+        public void run() {
+            try {
+                writeCommands();
+            } catch (IOException e) {
+                Log.e(RtBox.TAG, "IO Exception", e);
+            }
         }
-        customEnv.add("LD_LIBRARY_PATH=" + LD_LIBRARY_PATH);
-
-        Shell shell = new Shell(Utils.getSuPath(), customEnv, baseDirectory);
-
-        return shell;
-    }
-
-
-    /**
-     * Start root shell without customEnv abd baseDirectory
-     *
-     * @return
-     * @throws IOException
-     */
-    public static Shell startRootShell() throws IOException {
-        return startRootShell(null, null);
-    }
-
-    /**
-     * Start root shell without customEnv abd baseDirectory
-     * Add OnRootAccessDenied Interface
-     *
-     * @param onAccess
-     * @return
-     * @throws IOException
-     */
-    public static Shell startRootShell(OnRootAccessDenied onAccess) throws IOException {
-        Shell shell = new Shell(Utils.getSuPath(), null, null, onAccess);
-        return shell;
-    }
-
-    /**
-     * Start normal sh shell
-     *
-     * @param customEnv
-     * @param baseDirectory
-     * @return
-     * @throws IOException
-     */
-    public static Shell startShell(ArrayList<String> customEnv, String baseDirectory)
-            throws IOException {
-        Log.d(RtBox.TAG, "Starting Shell!");
-        Shell shell = new Shell("sh", customEnv, baseDirectory);
-        return shell;
-    }
-
-
-    /**
-     * Start normal sh shell without customEnv abd baseDirectory
-     *
-     * @return
-     */
-    public static Shell startShell() {
-        try {
-            return startShell(null, null);
-        } catch (IOException e) {
-            Log.e(RtBox.TAG, "IOException when starting Shell", e);
-            return null;
+    };
+    private Runnable outputRunnable = new Runnable() {
+        public void run() {
+            try {
+                readOutput();
+            } catch (IOException e) {
+                Log.e(RtBox.TAG, "IOException", e);
+            } catch (InterruptedException e) {
+                Log.e(RtBox.TAG, "InterruptedException", e);
+            }
         }
-    }
-
-    /**
-     * Start custom shell defined by shellPath
-     *
-     * @param shellPath
-     * @param customEnv
-     * @param baseDirectory
-     * @return
-     * @throws IOException
-     */
-    public static Shell startCustomShell(String shellPath, ArrayList<String> customEnv,
-                                         String baseDirectory) throws IOException {
-        Log.d(RtBox.TAG, "Starting Custom Shell!");
-        Shell shell = new Shell(shellPath, customEnv, baseDirectory);
-
-        return shell;
-    }
-
-    /**
-     * Start custom shell defined by shellPath without custom environment and base directory
-     *
-     * @param shellPath
-     * @return
-     * @throws IOException
-     */
-    public static Shell startCustomShell(String shellPath) throws IOException {
-        return startCustomShell(shellPath, null, null);
-    }
+    };
 
     /**
      * Constructs instance of shell
@@ -231,27 +144,109 @@ public class Shell implements Closeable {
         new Thread(outputRunnable, "Shell Output").start();
     }
 
-    private Runnable inputRunnable = new Runnable() {
-        public void run() {
-            try {
-                writeCommands();
-            } catch (IOException e) {
-                Log.e(RtBox.TAG, "IO Exception", e);
-            }
-        }
-    };
+    /**
+     * Start root shell
+     *
+     * @param customEnv
+     * @param baseDirectory
+     * @return
+     * @throws IOException
+     */
+    public static Shell startRootShell(ArrayList<String> customEnv, String baseDirectory)
+            throws IOException {
+        Log.d(RtBox.TAG, "Starting Root Shell!");
 
-    private Runnable outputRunnable = new Runnable() {
-        public void run() {
-            try {
-                readOutput();
-            } catch (IOException e) {
-                Log.e(RtBox.TAG, "IOException", e);
-            } catch (InterruptedException e) {
-                Log.e(RtBox.TAG, "InterruptedException", e);
-            }
+        // On some versions of Android (ICS) LD_LIBRARY_PATH is unset when using su
+        // We need to pass LD_LIBRARY_PATH over su for some commands to work correctly.
+        if (customEnv == null) {
+            customEnv = new ArrayList<String>();
         }
-    };
+        customEnv.add("LD_LIBRARY_PATH=" + LD_LIBRARY_PATH);
+
+        Shell shell = new Shell(Utils.getSuPath(), customEnv, baseDirectory);
+
+        return shell;
+    }
+
+    /**
+     * Start root shell without customEnv abd baseDirectory
+     *
+     * @return
+     * @throws IOException
+     */
+    public static Shell startRootShell() throws IOException {
+        return startRootShell(null, null);
+    }
+
+    /**
+     * Start root shell without customEnv abd baseDirectory
+     * Add OnRootAccessDenied Interface
+     *
+     * @param onAccess
+     * @return
+     * @throws IOException
+     */
+    public static Shell startRootShell(OnRootAccessDenied onAccess) throws IOException {
+        Shell shell = new Shell(Utils.getSuPath(), null, null, onAccess);
+        return shell;
+    }
+
+    /**
+     * Start normal sh shell
+     *
+     * @param customEnv
+     * @param baseDirectory
+     * @return
+     * @throws IOException
+     */
+    public static Shell startShell(ArrayList<String> customEnv, String baseDirectory)
+            throws IOException {
+        Log.d(RtBox.TAG, "Starting Shell!");
+        Shell shell = new Shell("sh", customEnv, baseDirectory);
+        return shell;
+    }
+
+    /**
+     * Start normal sh shell without customEnv abd baseDirectory
+     *
+     * @return
+     */
+    public static Shell startShell() {
+        try {
+            return startShell(null, null);
+        } catch (IOException e) {
+            Log.e(RtBox.TAG, "IOException when starting Shell", e);
+            return null;
+        }
+    }
+
+    /**
+     * Start custom shell defined by shellPath
+     *
+     * @param shellPath
+     * @param customEnv
+     * @param baseDirectory
+     * @return
+     * @throws IOException
+     */
+    public static Shell startCustomShell(String shellPath, ArrayList<String> customEnv,
+                                         String baseDirectory) throws IOException {
+        Log.d(RtBox.TAG, "Starting Custom Shell!");
+        Shell shell = new Shell(shellPath, customEnv, baseDirectory);
+
+        return shell;
+    }
+
+    /**
+     * Start custom shell defined by shellPath without custom environment and base directory
+     *
+     * @param shellPath
+     * @return
+     * @throws IOException
+     */
+    public static Shell startCustomShell(String shellPath) throws IOException {
+        return startCustomShell(shellPath, null, null);
+    }
 
     /**
      * write all commands to shell one by one

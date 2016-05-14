@@ -5,8 +5,8 @@ package top.itmp.rtbox.utils;
  */
 public interface OnRootAccessDenied {
 
-/*
-     Maybe We Need Tell User Why We Need Root Permission!!!
-*/
+    /*
+         Maybe We Need Tell User Why We Need Root Permission!!!
+    */
     void onDenied();
 }

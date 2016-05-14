@@ -21,13 +21,13 @@ public class Utils {
         *
         * The Archos tablet has it in /data/bin/su, since they don't have write access to /system yet.
         */
-    static final String[] BinaryPlaces = { "/data/bin/", "/system/bin/", "/system/xbin/", "/sbin/",
+    static final String[] BinaryPlaces = {"/data/bin/", "/system/bin/", "/system/xbin/", "/sbin/",
             "/data/local/xbin/", "/data/local/bin/", "/system/sd/xbin/", "/system/bin/failsafe/",
-            "/data/local/" };
+            "/data/local/"};
 
     /**
      * Determine the path of the su executable.
-     *
+     * <p>
      * Code from https://github.com/miracle2k/android-autostarts, use under Apache License was
      * agreed by Michael Elsdörfer
      */
@@ -47,20 +47,20 @@ public class Utils {
 
     /**
      * This code is adapted from java.lang.ProcessBuilder.start().
-     *
+     * <p>
      * The problem is that Android doesn't allow us to modify the map returned by
      * ProcessBuilder.environment(), even though the docstring indicates that it should. This is
      * because it simply returns the SystemEnvironment object that System.getenv() gives us. The
      * relevant portion in the source code is marked as "// android changed", so presumably it's not
      * the case in the original version of the Apache Harmony project.
-     *
+     * <p>
      * Note that simply passing the environment variables we want to Process.exec won't be good
      * enough, since that would override the environment we inherited completely.
-     *
+     * <p>
      * We needed to be able to set a CLASSPATH environment variable for our new process in order to
      * use the "app_process" command directly. Note: "app_process" takes arguments passed on to the
      * Dalvik VM as well; this might be an alternative way to set the class path.
-     *
+     * <p>
      * Code from https://github.com/miracle2k/android-autostarts, use under Apache License was
      * agreed by Michael Elsdörfer
      */

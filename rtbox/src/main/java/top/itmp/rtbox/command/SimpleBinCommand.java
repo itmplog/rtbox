@@ -1,22 +1,19 @@
 package top.itmp.rtbox.command;
 
-import top.itmp.rtbox.RtBox;
-import top.itmp.rtbox.utils.Log;
+import android.content.Context;
 
 /**
- * Created by hz on 2016/5/3.
+ * Created by hz on 16/5/14.
  */
-public class SimpleCommand extends Command {
-
+public class SimpleBinCommand extends BinCommand {
     private StringBuilder sb = new StringBuilder();
 
-    public SimpleCommand(String... command) {
-        super(command);
+    public SimpleBinCommand(Context context, String binName, String parameters) {
+        super(context, binName, parameters);
     }
 
     @Override
     public void output(int id, String line) {
-        Log.v(RtBox.TAG, line + "    " + id);
         sb.append(line).append('\n');
     }
 
@@ -25,7 +22,7 @@ public class SimpleCommand extends Command {
 
     }
 
-    public String getOutput() {
+    public String getOutPut() {
         return sb.toString();
     }
 
