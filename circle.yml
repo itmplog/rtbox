@@ -19,6 +19,7 @@ dependencies:
         - echo y | android update sdk --no-ui --all --filter "extra-google-google_play_services"
         #- echo y | android update sdk --no-ui --all --filter "sys-img-armeabi-v7a-android-23"
         #- echo y | android update sdk --no-ui --all --filter "sys-img-x86-android-23"
+        - export PATH="$PATH:$ANDROID_NDK"
         - ./gradlew dependencies
 
 test:
