@@ -1,3 +1,4 @@
+
 apply plugin: 'com.android.application'
 
 android {
@@ -45,21 +46,36 @@ android {
     tasks.withType(JavaCompile) {
         compileTask -> compileTask.dependsOn buildNative, renameExecutables
     }
-\
+
     task buildNative(type: Exec, description: 'Compile JNI source via NDK') {
-        def ndkDir = android.ndkDirectory.getAbsolutePath()
-        commandLine ndkDir + "/ndk-build",
-                '-C', file('jni').absolutePath, // Change src/main/jni the relative path to your jni source
-                '-j', Runtime.runtime.availableProcessors()
-        //'all',
-        //'NDK_DEBUG=1'
+        //def ndkDir = android.ndkDirectory.getAbsolutePath()
+
+        if (System.getProperty('os.name').toLowerCase().contains('windows')) {
+            commandLine  "ndk-build.cmd",
+                    '-C', file('jni').absolutePath, // Change src/main/jni the relative path to your jni source
+                    '-j', Runtime.runtime.availableProcessors()
+            //'all',
+            //'NDK_DEBUG=1'
+        }else{
+            commandLine "ndk-build",
+                    '-C', file('jni').absolutePath, // Change src/main/jni the relative path to your jni source
+                    '-j', Runtime.runtime.availableProcessors()
+            //'all',
+            //'NDK_DEBUG=1'
+        }
     }
 
     task cleanNative(type: Exec, description: 'Clean JNI object files') {
-        def ndkDir = android.ndkDirectory.getAbsolutePath()
-        commandLine ndkDir + "/ndk-build",
-                '-C', file('jni').absolutePath, // Change src/main/jni the relative path to your jni source
-                'clean'
+        //def ndkDir = android.ndkDirectory.getAbsolutePath()
+        if (System.getProperty('os.name').toLowerCase().contains('windows')) {
+            commandLine "ndk-build.cmd",
+                    '-C', file('jni').absolutePath, // Change src/main/jni the relative path to your jni source
+                    'clean'
+        } else {
+            commandLine "ndk-build",
+                    '-C', file('jni').absolutePath, // Change src/main/jni the relative path to your jni source
+                    'clean'
+        }
     }
 
     clean.dependsOn 'cleanNative'
