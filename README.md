@@ -15,7 +15,7 @@ Use library as Gradle dependency
 
 2.  Gradle:
     ```
-    compile 'top.itmp.rtbox:rtbox:0.1.1'
+    compile 'top.itmp.rtbox:rtbox:0.2.0'
     ```
 
 3. Maven:
@@ -23,31 +23,35 @@ Use library as Gradle dependency
     <dependency>
       <groupId>top.itmp.rtbox</groupId>
       <artifactId>rtbox</artifactId>
-      <version>0.1.1</version>
+      <version>0.2.0</version>
       <type>pom</type>
     </dependency>
     ```
 
 4. Snapshots:
 	- Add it in your root build.gradle at the end of repositories:
+
 		```
-	allprojects {
-		repositories {
-			...
-				maven { url "https://jitpack.io" }
+		allprojects {
+			repositories {
+				...
+					maven { url "https://jitpack.io" }
+			}
 		}
-	}
 		```
+
 	- Add the dependency
+
 		```
-	dependencies {
-		compile 'com.github.nullog:rtbox:-SNAPSHOT'
-	}
+		dependencies {
+			compile 'com.github.nullog:rtbox:-SNAPSHOT'
+		}
 		```
 
 	[![](https://jitpack.io/v/nullog/rtbox.svg)](https://jitpack.io/#nullog/rtbox)
 	[Download The Last AAR](https://jitpack.io/com/github/nullog/rtbox/-SNAPSHOT/rtbox--SNAPSHOT.aar)
 	> How to use the last aar:
+
 	* Add it in your `app` build.gradle at the end of repositories: 
 
 		```
