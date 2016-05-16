@@ -46,6 +46,8 @@ before_script:
 
 script: ./gradlew clean build connectedCheck -PdisablePreDex
 
+after_success:
+  - bash <(curl -s https://codecov.io/bash)
 notifications:
   email: false
 
