@@ -6,7 +6,6 @@ RTBox (RootBox)
 [![Circle CI](https://circleci.com/gh/nullog/rtbox.svg?style=svg)](https://circleci.com/gh/nullog/rtbox) 
 [![Build Status](https://drone.io/github.com/nullog/rtbox/status.png)](https://drone.io/github.com/nullog/rtbox/latest) 
 [![Build status](https://ci.appveyor.com/api/projects/status/9b47hu8gd3dxui7s?svg=true)](https://ci.appveyor.com/project/leehz/rtbox)
-[![Coverage Status](https://coveralls.io/repos/github/nullog/rtbox/badge.svg?branch=master)](https://coveralls.io/github/nullog/rtbox?branch=master)
 [![codecov](https://codecov.io/gh/nullog/rtbox/branch/master/graph/badge.svg)](https://codecov.io/gh/nullog/rtbox)
 
 This ia a library to simplify the usage of root exec on the Android OS.It is a Java wrapper around native binaries shipped with every Android OS, but can also be used to package and execute your own native binaries.
