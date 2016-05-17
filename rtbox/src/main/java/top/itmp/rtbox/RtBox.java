@@ -30,7 +30,7 @@ public class RtBox {
     public static final int REBOOT_RECOVERY = 4;
     public static final int REBOOT_BOOTLOADER = 5;
     public static final int REBOOT_DOWNLOAD = 6;
-    public static boolean DebugMode = BuildConfig.DEBUG;
+    public static boolean Debug = BuildConfig.DEBUG;
     public static int DefaultCommandTimeout = 10000;
     private Shell shell;
 

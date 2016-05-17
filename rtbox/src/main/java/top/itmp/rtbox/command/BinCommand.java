@@ -67,7 +67,7 @@ public abstract class BinCommand extends Command {
     }
 
 
-    public String getCommandLine(){
+    public String getCommandLine() {
         return commandLine;
     }
 

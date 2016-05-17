@@ -15,7 +15,6 @@ import java.util.concurrent.TimeoutException;
 
 import top.itmp.rtbox.RtBox;
 import top.itmp.rtbox.Shell;
-import top.itmp.rtbox.command.Command;
 import top.itmp.rtbox.command.SimpleCommand;
 
 /**
@@ -38,21 +37,21 @@ public class FramentNew extends Fragment {
         button.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                RtBox.DebugMode = true;
+                RtBox.Debug = true;
                 Shell shell = Shell.startShell();
                 SimpleCommand simpleCommand = new SimpleCommand("echo aaaa");
                 SimpleCommand simpleCommand1 = new SimpleCommand("echo bbbb");
                 SimpleCommand simpleCommand2 = new SimpleCommand("echo cccc");
                 try {
                     shell.add(simpleCommand);
-                }catch (IOException e){
+                } catch (IOException e) {
                     e.printStackTrace();
                 }
 
                 shell.run(simpleCommand1);
                 try {
                     simpleCommand.waitForFinish();
-                }catch (TimeoutException e){
+                } catch (TimeoutException e) {
                     e.printStackTrace();
                 }
                 simpleCommand2.exec(shell);
@@ -60,8 +59,8 @@ public class FramentNew extends Fragment {
                 new AlertDialog.Builder(getActivity())
                         .setTitle("Output")
                         .setMessage(simpleCommand.getCommand() + ": " + simpleCommand.getOutput() + "\n" +
-                        simpleCommand1.getCommand() + ": " + simpleCommand1.getOutput() + "\n" +
-                        simpleCommand2.getCommand() + ": " + simpleCommand2.getOutput() + "\n")
+                                simpleCommand1.getCommand() + ": " + simpleCommand1.getOutput() + "\n" +
+                                simpleCommand2.getCommand() + ": " + simpleCommand2.getOutput() + "\n")
                         .show();
             }
         });

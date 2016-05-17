@@ -36,14 +36,14 @@ public class FragmentNormal extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         View rootView = inflater.inflate(R.layout.frament_normal, container, false);
-        scrollView = (ScrollView)rootView.findViewById(R.id.scrollView);
-        content = (TextView)rootView.findViewById(R.id.textView);
-        execContent = (EditText)rootView.findViewById(R.id.execContent);
-        exec = (Button)rootView.findViewById(R.id.exec);
-        superExec = (Button)rootView.findViewById(R.id.execSuper);
-        checkRootAccess = (Button)rootView.findViewById(R.id.checkRootAccess);
+        scrollView = (ScrollView) rootView.findViewById(R.id.scrollView);
+        content = (TextView) rootView.findViewById(R.id.textView);
+        execContent = (EditText) rootView.findViewById(R.id.execContent);
+        exec = (Button) rootView.findViewById(R.id.exec);
+        superExec = (Button) rootView.findViewById(R.id.execSuper);
+        checkRootAccess = (Button) rootView.findViewById(R.id.checkRootAccess);
 
-        RtBox.DebugMode = true;
+        RtBox.Debug = true;
         RtBox.DefaultCommandTimeout = 5000;
 
         exec.setOnClickListener(new View.OnClickListener() {
@@ -51,15 +51,15 @@ public class FragmentNormal extends Fragment {
             public void onClick(View v) {
                 String execString = execContent.getText().toString();
 
-                if(TextUtils.isEmpty(execString)){
+                if (TextUtils.isEmpty(execString)) {
                     Toast.makeText(getActivity(), "Must not be empty", Toast.LENGTH_SHORT).show();
-                }else{
+                } else {
                     try {
                         Shell shell = Shell.startShell();
                         SimpleCommand simpleCommand = new SimpleCommand(execString);
                         shell.add(simpleCommand).waitForFinish();
 
-                        content.append(simpleCommand.getOutput() +"return: " + simpleCommand.getExitCode());
+                        content.append(simpleCommand.getOutput() + "return: " + simpleCommand.getExitCode());
 
                         scrollView.post(new Runnable() {
                             @Override
@@ -69,9 +69,9 @@ public class FragmentNormal extends Fragment {
                         });
 
                         shell.close();
-                    }catch (IOException e){
+                    } catch (IOException e) {
                         e.printStackTrace();
-                    }catch (TimeoutException e){
+                    } catch (TimeoutException e) {
                         e.printStackTrace();
                     }
                 }
@@ -90,7 +90,7 @@ public class FragmentNormal extends Fragment {
                     boolean rootAccess = false;
                     try {
 
-                        Shell shell = Shell.startRootShell(new OnRootAccessDenied(){
+                        Shell shell = Shell.startRootShell(new OnRootAccessDenied() {
                             @Override
                             public void onDenied() {
                                 new AlertDialog.Builder(getActivity())
@@ -114,11 +114,11 @@ public class FragmentNormal extends Fragment {
                         shell.close();
                     } catch (IOException e) {
                         e.printStackTrace();
-                    }catch (TimeoutException e){
+                    } catch (TimeoutException e) {
                         e.printStackTrace();
                     }
                     Log.v(RtBox.TAG, "root: " + rootAccess);
-                    if(!rootAccess){
+                    if (!rootAccess) {
                         Toast.makeText(getActivity(), "No Root Access Granted", Toast.LENGTH_SHORT)
                                 .show();
                     }
@@ -133,10 +133,10 @@ public class FragmentNormal extends Fragment {
                 AlertDialog.Builder builder = new AlertDialog.Builder(getActivity())
                         .setTitle("Root Access")
                         .setPositiveButton(android.R.string.ok, null);
-                if(RtBox.isRootAccessGranted()){
+                if (RtBox.isRootAccessGranted()) {
                     builder.setMessage("Granted")
                             .show();
-                }else{
+                } else {
                     builder.setMessage("Not Granted")
                             .show();
                 }

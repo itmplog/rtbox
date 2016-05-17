@@ -2,7 +2,6 @@ package top.itmp.rtbox.example;
 
 import android.graphics.Color;
 import android.os.Bundle;
-import android.support.design.widget.TabLayout;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentPagerAdapter;
@@ -28,7 +27,7 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        viewPager = (ViewPager)findViewById(R.id.viewpager);
+        viewPager = (ViewPager) findViewById(R.id.viewpager);
         MainPagerAdapter pagerAdapter = new MainPagerAdapter(getSupportFragmentManager());
         pagerAdapter.add(new FragmentNormal(), "normal");
         pagerAdapter.add(new FramentNew(), "exec");
@@ -41,14 +40,14 @@ public class MainActivity extends AppCompatActivity {
 
     }
 
-    private static class MainPagerAdapter extends FragmentPagerAdapter{
+    private static class MainPagerAdapter extends FragmentPagerAdapter {
         private List<Pair<Fragment, String>> fragments = new ArrayList<>();
 
-        public void add(Fragment fragment, String title){
+        public void add(Fragment fragment, String title) {
             fragments.add(new Pair(fragment, title));
         }
 
-        public MainPagerAdapter(FragmentManager fm){
+        public MainPagerAdapter(FragmentManager fm) {
             super(fm);
         }
 

@@ -32,7 +32,7 @@ public class FragmentBin extends Fragment {
         final TextView textView = new TextView(getActivity());
         textView.setLayoutParams(new ViewGroup.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT));
 
-        RtBox.DebugMode = true;
+        RtBox.Debug = true;
         final Shell shell = Shell.startShell();
         final RtBox rtBox = new RtBox(shell);
         final SimpleBinCommand simpleBinCommand = new SimpleBinCommand(getActivity(), "hello");
@@ -47,17 +47,17 @@ public class FragmentBin extends Fragment {
 
                 try {
                     boolean isRunning = rtBox.isProcessRunning(simpleBinCommand.getCommandLine());
-                    textView.setText(simpleBinCommand.getCommand() + (isRunning ? "running: \n": "not running\n"));
+                    textView.setText(simpleBinCommand.getCommand() + (isRunning ? "running: \n" : "not running\n"));
 
-                    if(isRunning){
+                    if (isRunning) {
                         ArrayList<String> pids = rtBox.getPids(simpleBinCommand.getCommandLine());
-                        for(String pid: pids){
+                        for (String pid : pids) {
                             textView.append(pid + ' ');
                         }
                     }
-                }catch (IOException e){
+                } catch (IOException e) {
                     e.printStackTrace();
-                }catch (TimeoutException e){
+                } catch (TimeoutException e) {
                     e.printStackTrace();
                 }
 
@@ -71,12 +71,12 @@ public class FragmentBin extends Fragment {
             @Override
             public void onClick(View v) {
                 try {
-                    if(rtBox.isProcessRunning(simpleBinCommand.getCommandLine())){
-                       textView.setText(rtBox.killAll(simpleBinCommand.getCommandLine()) ? "killed" : "kill failed");
+                    if (rtBox.isProcessRunning(simpleBinCommand.getCommandLine())) {
+                        textView.setText(rtBox.killAll(simpleBinCommand.getCommandLine()) ? "killed" : "kill failed");
                     }
-                }catch (IOException e){
+                } catch (IOException e) {
                     e.printStackTrace();
-                }catch (TimeoutException e){
+                } catch (TimeoutException e) {
                     e.printStackTrace();
                 }
             }
