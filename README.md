@@ -1,7 +1,8 @@
 RTBox (RootBox)
 ===============
 
-[![Build Status](https://travis-ci.org/nullog/rtbox.svg?branch=master)](https://travis-ci.org/nullog/rtbox) 
+[![Build Status](https://travis-ci.org/nullog/rtbox.svg?branch=master)](https://travis-ci.org/nullog/rtbox)
+[ ![Codeship Status for nullog/rtbox](https://codeship.com/projects/1b64d8e0-fe89-0133-c266-364f31082d61/status?branch=master) ](https://codeship.com/projects/152528)
 [![Circle CI](https://circleci.com/gh/nullog/rtbox.svg?style=svg)](https://circleci.com/gh/nullog/rtbox) 
 [![Build Status](https://drone.io/github.com/nullog/rtbox/status.png)](https://drone.io/github.com/nullog/rtbox/latest) 
 [![Build status](https://ci.appveyor.com/api/projects/status/9b47hu8gd3dxui7s?svg=true)](https://ci.appveyor.com/project/leehz/rtbox)
